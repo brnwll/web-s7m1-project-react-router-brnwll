@@ -13,26 +13,31 @@ export default function App () {
     const getMovies = () => {
       axios
         .get('http://localhost:5001/api/movies')
-        .then(response => {
-          setMovies(response.data)
-        })
-        .catch(error => {
-          console.error('Server Error', error);
-        });
+        .then(response => setMovies(response.data))
+        .catch(error => console.error('Server Error', error));
     }
     getMovies();
   }, []);
 
-  const addToSavedList = id => {
-    // This is stretch. Prevent the same movie from being "saved" more than once
+  const addToSavedList = movie => {
+    if (!saved.find(m => m.id === movie.id)) {
+      setSaved([...saved, movie])
+    }
   };
 
   return ( movies && 
     <>
-      <SavedList list={[ /* This is stretch */]} />
+      <SavedList list={saved} />
       <Routes>
-        <Route path='/' element={<MovieList movies={movies} />} />
-        <Route path='movies/:id' element={<Movie />} />
+        <Route 
+          path='/' 
+          element={<MovieList 
+          movies={movies} />} 
+        />
+        <Route 
+          path='movies/:id' 
+          element={<Movie addToSavedList={addToSavedList} />} 
+        />
       </Routes>
     </>
   );

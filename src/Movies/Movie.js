@@ -16,13 +16,13 @@ export default function Movie(props) {
           ? setMovie(response.data)
           : navigate('/');
       })
-      .catch(error => {
-        console.error(error);
-      });
-  }, [id]);
+      .catch(error => console.error(error));
+  }, [id, navigate]);
 
-  // Uncomment this only when you have moved on to the stretch goals
-  // const saveMovie = evt => { }
+  const saveMovie = movie => {
+    props.addToSavedList(movie);
+    navigate('/');
+  }
 
   if (!movie) {
     return <div>Loading movie information...</div>;
@@ -31,7 +31,7 @@ export default function Movie(props) {
   return (
     <div className="save-wrapper">
       <MovieCard key={movie.id} movie={movie} />
-      <div className="save-button">Save</div>
+      <div className="save-button" onClick={() => saveMovie(movie)}>Save</div>
     </div>
   );
 }
